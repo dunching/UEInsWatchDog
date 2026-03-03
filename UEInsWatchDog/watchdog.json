@@ -1,0 +1,17 @@
+{
+  "811": {
+    "CpuAffinityMask": 31
+  }
+  "812": {
+    "CpuAffinityMask": 31
+  }
+  "ExePath": "D:\\WorkSpace\\OutDir\\SmartCity\\Windows\\SmartCity\\Binaries\\Win64\\",
+  "StartProName": "SmartCity-Win64-DebugGame.exe",
+  "RealName": "SmartCity-Win64-DebugGame.exe",
+  "Arguments": " -AllowPixelStreamingCommands -log -RenderOffScreen -PixelStreamingIP=localhost -PixelStreamingWebRTCMaxFps=24 -Unattended -PixelStreamingEncoderCodec=VP9",
+  "RestartDelaySeconds": 3,
+  "MaxRestartCount": 5,
+  "RestartTimeWindowSeconds": 60,
+  "HeartbeatTimeoutSeconds": 10,
+  "HeartbeatCheckIntervalSeconds": 1
+}
