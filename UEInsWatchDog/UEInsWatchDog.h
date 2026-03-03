@@ -30,7 +30,7 @@ struct Config
     int RestartTimeWindowSeconds = 60;
     int HeartbeatTimeoutSeconds = 10;
     int HeartbeatCheckIntervalSeconds = 1;
-    ULONGLONG StartTime = 1000 * 60;
+    ULONGLONG StartTime = 1000 * 60 * 2;
 
     std::vector<InstanceConfig> Instances;
 };
@@ -50,6 +50,7 @@ struct SharedData
 struct RunningInstance
 {
     InstanceConfig Config;
+    
     PROCESS_INFORMATION ProcessInfo;
     
     ULONGLONG StartTime = 0;

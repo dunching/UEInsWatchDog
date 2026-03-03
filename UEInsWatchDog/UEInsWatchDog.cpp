@@ -19,7 +19,7 @@ Config LoadConfig()
 {
     Config cfg;
 
-    std::ifstream file("D:\\WorkSpace\\UEInsWatchDog\\UEInsWatchDog\\watchdog.json");
+    std::ifstream file("D:\\WorkSpace\\OutDir\\SmartCity\\watchdog.json");
     if (!file.is_open())
     {
         std::cout << "Open watchdog.json failed\n";
@@ -27,9 +27,9 @@ Config LoadConfig()
     }
 
     std::wstring content(
-                        (std::istreambuf_iterator<char>(file)),
-                        std::istreambuf_iterator<char>()
-                       );
+                         (std::istreambuf_iterator<char>(file)),
+                         std::istreambuf_iterator<char>()
+                        );
 
     auto GetValue = [&](
         const std::wstring& key
@@ -44,13 +44,19 @@ Config LoadConfig()
 
         std::wstring v = content.substr(start, end - start);
         v.erase(remove(v.begin(), v.end(), '\"'), v.end());
-        v.erase(remove(v.begin(), v.end(), ' '), v.end());
+        // v.erase(remove(v.begin(), v.end(), ' '), v.end());
         return v;
     };
 
     cfg.ExePath = GetValue(L"ExePath");
+    cfg.ExePath.erase(remove(cfg.ExePath.begin(), cfg.ExePath.end(), ' '), cfg.ExePath.end());
+
     cfg.StartProName = GetValue(L"StartProName");
+    cfg.StartProName.erase(remove(cfg.StartProName.begin(), cfg.StartProName.end(), ' '), cfg.StartProName.end());
+
     cfg.RealName = GetValue(L"RealName");
+    cfg.RealName.erase(remove(cfg.RealName.begin(), cfg.RealName.end(), ' '), cfg.RealName.end());
+    
     cfg.Arguments = GetValue(L"Arguments");
 
     cfg.RestartDelaySeconds =
@@ -118,10 +124,10 @@ HANDLE CreateSharedMemory(
     const InstanceConfig& RunningInstance
     )
 {
-    std::wstring Str (L"Local\\UE_WATCHDOG_HEARTBEAT_" );
-    
-    Str.append( std::to_wstring(RunningInstance.Port));
-    
+    std::wstring Str(L"Local\\UE_WATCHDOG_HEARTBEAT_");
+
+    Str.append(std::to_wstring(RunningInstance.Port));
+
     HANDLE hMap = CreateFileMappingW(
                                      INVALID_HANDLE_VALUE,
                                      nullptr,
@@ -157,7 +163,6 @@ bool LaunchInstance(
         std::wstring(cfg.StartProName.begin(), cfg.StartProName.end());
 
     std::wstring cmd =
-        exeFull +
         L" -PixelStreamingPort=" +
         std::to_wstring(inst.Port) +
         L" " +
@@ -172,7 +177,7 @@ bool LaunchInstance(
     STARTUPINFOW si = {sizeof(si)};
 
     BOOL result = CreateProcessW(
-                                 NULL,
+                                 exeFull.data(),
                                  buffer.data(),
                                  NULL,
                                  NULL,
@@ -194,11 +199,11 @@ bool LaunchInstance(
 
     if (run.hMap == nullptr)
     {
-        run.hMap = CreateSharedMemory(&run.shared, inst);   
+        run.hMap = CreateSharedMemory(&run.shared, inst);
     }
 
     run.StartTime = GetTickCount64();
-    
+
     return true;
 }
 
@@ -223,7 +228,8 @@ std::vector<DWORD> GetAllUEProcesses(
             {
                 result.push_back(pe.th32ProcessID);
             }
-        } while (Process32Next(snapshot, &pe));
+        }
+        while (Process32Next(snapshot, &pe));
     }
 
     CloseHandle(snapshot);

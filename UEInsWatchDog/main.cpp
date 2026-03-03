@@ -67,6 +67,9 @@ int main()
                 TerminateProcess(run.ProcessInfo.hProcess, 1);
             }
 
+            std::cout << "Port"
+                << run.Config.Port << "OK"<<"\n";
+
             // 崩溃或退出
             if (wait == WAIT_OBJECT_0)
             {
